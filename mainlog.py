@@ -4,25 +4,19 @@ import time
 from loguru import logger
 from config import access_token, group_id, video_folder, description  # Импорт конфиденциальной информации
 
-# Настройка логирования
+# Настройка логирования в файл
 logger.add("main_script.log", rotation="1 MB")
 
 # Авторизация в VK через API
 vk_session = vk_api.VkApi(token=access_token)
 vk = vk_session.get_api()
 
-
 # Функция для загрузки и постинга видео как клипа
 def post_video(file_path, group_id, description):
     try:
-        # Получаем данные для загрузки, устанавливаем is_clips=True
+        # Получаем данные для загрузки
         logger.info(f"Получаем URL для загрузки видео: {file_path}")
-        upload_url = vk.video.save(
-            name=os.path.basename(file_path),
-            description=description,
-            group_id=group_id,
-            is_clips=True  # Загрузка как клип
-        )['upload_url']
+        upload_url = vk.video.save(name=os.path.basename(file_path), description=description, group_id=group_id, is_clips=True)['upload_url']
 
         # Загружаем видео
         logger.info(f"Загружаем видео: {file_path}")
@@ -37,7 +31,6 @@ def post_video(file_path, group_id, description):
 
     except Exception as e:
         logger.error(f"Ошибка при загрузке видео {file_path}: {e}")
-
 
 # Основной цикл для загрузки всех видео из папки
 def upload_videos_from_folder(video_folder, group_id, description):
@@ -56,8 +49,8 @@ def upload_videos_from_folder(video_folder, group_id, description):
         # Ждем некоторое время, чтобы избежать блокировок
         time.sleep(5)
 
-
 # Запуск загрузки только при непосредственном запуске скрипта
 if __name__ == "__main__":
     logger.info("Запуск скрипта для загрузки видео из папки")
     upload_videos_from_folder(video_folder, group_id, description)
+

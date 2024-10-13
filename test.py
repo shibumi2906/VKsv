@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import os
+from loguru import logger
+from config import access_token, group_id, video_folder, description  # Импорт конфиденциальной информации
 
 # Импортируем функции, которые будем тестировать
 from main_script import post_video, upload_videos_from_folder
@@ -18,7 +20,7 @@ class TestVkVideoUpload(unittest.TestCase):
         upload_videos_from_folder('fake_folder', '123', 'Test description')
 
         # Отладочный вывод вызовов post_video
-        print(mock_post_video.call_args_list)
+        logger.info(mock_post_video.call_args_list)
 
         # Проверяем вызовы с использованием os.path.join для корректного пути
         mock_post_video.assert_any_call(os.path.join('fake_folder', 'video1.mp4'), '123', 'Test description')
@@ -27,4 +29,5 @@ class TestVkVideoUpload(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
 
